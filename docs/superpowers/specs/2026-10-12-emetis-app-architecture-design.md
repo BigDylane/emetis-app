@@ -18,17 +18,17 @@ document ne couvre que la fondation technique et organisationnelle du projet.
 
 ## Décisions de stack (validées)
 
-| Sujet | Choix |
-|---|---|
-| Workflow Expo | Managed + EAS Build/Submit (pas de dossiers natifs committés) |
-| Langage | TypeScript strict |
-| Lint/format | ESLint (eslint-config-expo) + Prettier |
-| State management | Zustand (état local/UI) |
-| Data fetching / cache serveur | TanStack Query |
-| Navigation | Expo Router (file-based) |
-| CI/CD | GitHub Actions |
-| Stratégie de branches | Trunk-based simplifié (main + develop + branches courtes) |
-| Tests | Jest + React Native Testing Library (E2E différé) |
+| Sujet                         | Choix                                                         |
+| ----------------------------- | ------------------------------------------------------------- |
+| Workflow Expo                 | Managed + EAS Build/Submit (pas de dossiers natifs committés) |
+| Langage                       | TypeScript strict                                             |
+| Lint/format                   | ESLint (eslint-config-expo) + Prettier                        |
+| State management              | Zustand (état local/UI)                                       |
+| Data fetching / cache serveur | TanStack Query                                                |
+| Navigation                    | Expo Router (file-based)                                      |
+| CI/CD                         | GitHub Actions                                                |
+| Stratégie de branches         | Trunk-based simplifié (main + develop + branches courtes)     |
+| Tests                         | Jest + React Native Testing Library (E2E différé)             |
 
 ## 1. Structure du repo
 
@@ -114,6 +114,7 @@ ni appel API directement dans `app/`.
 ## 2. Conventions de nommage
 
 **Fichiers & dossiers**
+
 - Composants React: `PascalCase.tsx` → `ListingCard.tsx`, `BookingSummary.tsx`
 - Hooks: `useCamelCase.ts` → `useBookingDraft.ts`, `useHostListings.ts`
 - Routes Expo Router: groupes entre parenthèses (`(traveler)`), fichiers en `kebab-case`
@@ -123,6 +124,7 @@ ni appel API directement dans `app/`.
 - Tests: co-localisés, suffixe `.test.ts(x)` → `ListingCard.test.tsx`
 
 **Code**
+
 - Composants/Types/Interfaces: `PascalCase` → `interface BookingDraft`, `type UserRole`
 - Variables/fonctions: `camelCase`
 - Constantes globales figées: `UPPER_SNAKE_CASE` → `MAX_GUESTS`, `API_BASE_URL`
@@ -134,16 +136,19 @@ ni appel API directement dans `app/`.
 - Query keys TanStack: factory par feature → `bookingKeys.detail(id)`
 
 **Imports**
+
 - Alias absolu `@/` (tsconfig `paths`) obligatoire pour tout import hors dossier courant.
   Jamais de `../../../../`.
 
 **Branches Git**
+
 - `feature/<ticket>-<description-courte>` → `feature/EM-124-host-calendar-sync`
 - `fix/<ticket>-<description>` → `fix/EM-130-booking-date-overlap`
 - `chore/<description>` → `chore/update-expo-sdk`
 - `hotfix/<description>` si urgence prod
 
 **Commits — Conventional Commits**
+
 ```
 <type>(<scope>): <description courte à l'impératif>
 
@@ -151,6 +156,7 @@ ni appel API directement dans `app/`.
 
 [footer optionnel: Closes #123]
 ```
+
 Types: `feat`, `fix`, `chore`, `refactor`, `test`, `docs`, `style`, `perf`, `ci`.
 Scope = acteur ou module concerné: `feat(host): ajoute sync calendrier iCal`,
 `fix(traveler): corrige overlap dates booking`, `chore(deps): bump expo sdk 52`.
@@ -165,6 +171,7 @@ de secret en dur, docs à jour si besoin).
 
 **CI GitHub Actions** (`.github/workflows/ci.yml`), déclenchée sur chaque PR vers
 `develop`/`main`:
+
 1. `install` (cache du gestionnaire de paquets)
 2. `lint` — ESLint
 3. `typecheck` — `tsc --noEmit`
@@ -176,6 +183,7 @@ Chaque job est un check obligatoire avant merge. Un build EAS preview à la dema
 scaffold initial.
 
 **Protection des branches `main` et `develop`:**
+
 - PR obligatoire, pas de push direct
 - Au moins 1 review approuvée
 - Tous les checks CI verts obligatoires
@@ -183,12 +191,14 @@ scaffold initial.
 - Squash merge par défaut
 
 **Husky (local, avant la CI):**
+
 - `lint-staged` → ESLint + Prettier uniquement sur fichiers modifiés
 - `commit-msg` → commitlint valide le format conventional commit
 
 ## 4. Documentation et scaffold initial
 
 **`docs/`**
+
 ```
 docs/
 ├── README.md               # vue d'ensemble, lien vers tout
@@ -210,6 +220,7 @@ docs/
 silencieux en prod.
 
 **Contenu du scaffold à livrer:**
+
 - `create-expo-app` (template TypeScript) + Expo Router installé et configuré
 - ESLint (eslint-config-expo) + Prettier + Husky + lint-staged + commitlint configurés
 - Structure de dossiers complète de la section 1, avec fichiers exemples minimaux

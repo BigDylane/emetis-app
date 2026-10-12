@@ -25,11 +25,13 @@
 ### Task 1: Scaffold Expo + TypeScript + Expo Router project
 
 **Files:**
+
 - Create: entire Expo project tree via `create-expo-app` (package.json, app.json, app/, assets/, tsconfig.json, etc.)
 - Modify: `package.json` (scripts section)
 - Modify: `.gitignore` (verify Expo defaults are present)
 
 **Interfaces:**
+
 - Produces: a runnable Expo project with `app/` (Expo Router, default tabs template) and `package.json` scripts `start`, `android`, `ios`, `web`.
 
 - [ ] **Step 1: Run create-expo-app in the current directory**
@@ -65,9 +67,11 @@ git commit -m "chore: scaffold expo app with typescript and expo router"
 ### Task 2: TypeScript strict config + `@/` path alias
 
 **Files:**
+
 - Modify: `tsconfig.json`
 
 **Interfaces:**
+
 - Produces: `@/*` import alias resolving to `src/*` and project root for `app/*` usages; `strict: true`.
 
 - [ ] **Step 1: Update tsconfig.json**
@@ -104,12 +108,14 @@ git commit -m "chore: enable strict typescript and @/ path alias"
 ### Task 3: ESLint + Prettier
 
 **Files:**
+
 - Create: `eslint.config.js`
 - Create: `.prettierrc`
 - Create: `.prettierignore`
 - Modify: `package.json` (scripts: `lint`, `lint:fix`, `format`, `format:check`)
 
 **Interfaces:**
+
 - Produces: `npm run lint`, `npm run format:check` commands used by Husky (Task 4) and CI (Task 10).
 
 - [ ] **Step 1: Install dependencies**
@@ -191,6 +197,7 @@ git commit -m "chore: add eslint and prettier"
 ### Task 4: Husky + lint-staged + commitlint
 
 **Files:**
+
 - Create: `.husky/pre-commit`
 - Create: `.husky/commit-msg`
 - Create: `commitlint.config.js`
@@ -198,6 +205,7 @@ git commit -m "chore: add eslint and prettier"
 - Modify: `package.json` (scripts: `prepare`; devDependencies)
 
 **Interfaces:**
+
 - Produces: automatic lint/format on staged files before commit, and Conventional Commits validation on every commit message.
 
 - [ ] **Step 1: Install dependencies**
@@ -272,6 +280,7 @@ git commit -m "chore: add husky, lint-staged and commitlint"
 ### Task 5: Folder structure — `src/` skeleton with real base modules
 
 **Files:**
+
 - Create: `src/types/user.ts`
 - Create: `src/lib/env.ts`
 - Create: `src/lib/apiClient.ts`
@@ -283,6 +292,7 @@ git commit -m "chore: add husky, lint-staged and commitlint"
 - Modify: `app.config.ts` (create from `app.json` if needed, to read env)
 
 **Interfaces:**
+
 - Produces: `UserRole` type, `env` validated config object, `apiClient.get/post`, `queryClient` instance, `Button` component — all consumed by later tasks.
 
 - [ ] **Step 1: Install zod for env validation**
@@ -350,7 +360,8 @@ async function request<T>(path: string, init: RequestInit & RequestOptions = {})
 }
 
 export const apiClient = {
-  get: <T>(path: string, options?: RequestOptions) => request<T>(path, { method: 'GET', ...options }),
+  get: <T>(path: string, options?: RequestOptions) =>
+    request<T>(path, { method: 'GET', ...options }),
   post: <T>(path: string, body: unknown, options?: RequestOptions) =>
     request<T>(path, { method: 'POST', body: JSON.stringify(body), ...options }),
 };
@@ -450,11 +461,13 @@ git commit -m "feat: add env validation, api client, query client and base ui bu
 ### Task 6: Jest + React Native Testing Library
 
 **Files:**
+
 - Create: `jest.config.js`
 - Create: `jest.setup.js`
 - Modify: `package.json` (scripts: `test`, `test:watch`; devDependencies)
 
 **Interfaces:**
+
 - Produces: `npm test` running all `*.test.ts(x)` files, including the `Button.test.tsx` written in Task 5.
 
 - [ ] **Step 1: Install dependencies**
@@ -509,10 +522,12 @@ git commit -m "chore: add jest and react native testing library"
 ### Task 7: Zustand session store + auth module
 
 **Files:**
+
 - Create: `src/auth/sessionStore.ts`
 - Create: `src/auth/sessionStore.test.ts`
 
 **Interfaces:**
+
 - Consumes: `User`, `UserRole` from `src/types/user.ts` (Task 5).
 - Produces: `useSessionStore` hook with shape `{ user: User | null, setUser(user: User): void, logout(): void }`, consumed by `app/_layout.tsx` role-based redirect (Task 8).
 
@@ -581,6 +596,7 @@ git commit -m "feat: add zustand session store"
 ### Task 8: Route groups — public / auth / traveler / host with role-based redirect
 
 **Files:**
+
 - Modify: `app/_layout.tsx` (replace default content)
 - Create: `app/(public)/_layout.tsx`
 - Create: `app/(public)/index.tsx`
@@ -598,6 +614,7 @@ git commit -m "feat: add zustand session store"
 - Create: `src/public/features/discovery/DiscoveryScreen.tsx`
 
 **Interfaces:**
+
 - Consumes: `useSessionStore` from Task 7.
 - Produces: working navigation shell with role-based redirect at the root.
 
@@ -629,7 +646,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-- [ ] **Step 3: Create app/(public)/_layout.tsx and app/(public)/index.tsx**
+- [ ] **Step 3: Create app/(public)/\_layout.tsx and app/(public)/index.tsx**
 
 `app/(public)/_layout.tsx`:
 
@@ -651,7 +668,7 @@ export default function PublicIndex() {
 }
 ```
 
-- [ ] **Step 4: Create app/(auth)/_layout.tsx and app/(auth)/login.tsx**
+- [ ] **Step 4: Create app/(auth)/\_layout.tsx and app/(auth)/login.tsx**
 
 `app/(auth)/_layout.tsx`:
 
@@ -718,7 +735,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-- [ ] **Step 6: Create app/(traveler)/_layout.tsx and tabs**
+- [ ] **Step 6: Create app/(traveler)/\_layout.tsx and tabs**
 
 `app/(traveler)/_layout.tsx`:
 
@@ -780,7 +797,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-- [ ] **Step 8: Create app/(host)/_layout.tsx and tabs**
+- [ ] **Step 8: Create app/(host)/\_layout.tsx and tabs**
 
 `app/(host)/_layout.tsx`:
 
@@ -823,7 +840,7 @@ export default function Listings() {
 }
 ```
 
-- [ ] **Step 9: Replace app/_layout.tsx with the root providers + redirect**
+- [ ] **Step 9: Replace app/\_layout.tsx with the root providers + redirect**
 
 ```tsx
 import { Stack } from 'expo-router';
@@ -869,12 +886,14 @@ git commit -m "feat: add public/auth/traveler/host route groups with role-based 
 ### Task 9: TanStack Query example — host listings fetch
 
 **Files:**
+
 - Create: `src/actors/host/features/listings/api.ts`
 - Create: `src/actors/host/features/listings/useListings.ts`
 - Create: `src/actors/host/features/listings/useListings.test.ts`
 - Modify: `src/actors/host/features/listings/ListingsScreen.tsx`
 
 **Interfaces:**
+
 - Consumes: `apiClient` (Task 5), `queryClient` test utilities.
 - Produces: `useListings()` hook returning `{ data, isLoading, error }`, demonstrating the TanStack Query pattern feature teams will follow for other actors/features.
 
@@ -1011,12 +1030,14 @@ git commit -m "feat: add host listings query hook as tanstack query reference pa
 ### Task 10: GitHub Actions CI + PR template + issue template
 
 **Files:**
+
 - Create: `.github/workflows/ci.yml`
 - Create: `.github/PULL_REQUEST_TEMPLATE.md`
 - Create: `.github/ISSUE_TEMPLATE/bug_report.md`
 - Create: `.github/ISSUE_TEMPLATE/feature_request.md`
 
 **Interfaces:**
+
 - Produces: CI pipeline that runs on every PR to `main`/`develop`, used as required status checks once branch protection is configured on GitHub.
 
 - [ ] **Step 1: Create .github/workflows/ci.yml**
@@ -1059,25 +1080,32 @@ jobs:
 
 ```markdown
 ## Quoi
+
 <!-- Ce que ce PR change, en 1-2 phrases -->
 
 ## Pourquoi
+
 <!-- Lien ticket, contexte métier -->
+
 Closes #
 
 ## Acteur(s) concerné(s)
+
 - [ ] Public
 - [ ] Traveler
 - [ ] Host
 - [ ] Shared / transverse
 
 ## Comment tester
+
 <!-- Étapes manuelles pour vérifier -->
 
 ## Screenshots / vidéo
+
 <!-- Si changement UI -->
 
 ## Checklist
+
 - [ ] Testé sur iOS et Android (ou simulateur)
 - [ ] Tests unitaires ajoutés/mis à jour
 - [ ] Pas de `console.log` oublié
@@ -1099,15 +1127,18 @@ labels: bug
 ## Comportement attendu
 
 ## Étapes pour reproduire
+
 1.
 2.
 
 ## Acteur concerné
+
 - [ ] Public
 - [ ] Traveler
 - [ ] Host
 
 ## Environnement
+
 - Plateforme: iOS / Android
 - Version app:
 ```
@@ -1126,6 +1157,7 @@ labels: enhancement
 ## Solution proposée
 
 ## Acteur concerné
+
 - [ ] Public
 - [ ] Traveler
 - [ ] Host
@@ -1143,11 +1175,13 @@ git commit -m "ci: add github actions pipeline and pr/issue templates"
 ### Task 11: EAS config + app.config.ts
 
 **Files:**
+
 - Create: `eas.json`
 - Create: `app.config.ts`
 - Delete: `app.json` (superseded by `app.config.ts`)
 
 **Interfaces:**
+
 - Produces: `app.config.ts` exporting Expo config with env-driven `extra.apiBaseUrl`; `eas.json` with `development`, `preview`, `production` profiles.
 
 - [ ] **Step 1: Read the existing app.json to preserve generated values**
@@ -1241,6 +1275,7 @@ git commit -m "chore: switch to app.config.ts and add eas build profiles"
 ### Task 12: Documentation
 
 **Files:**
+
 - Create: `README.md` (modify if create-expo-app generated one)
 - Create: `docs/getting-started.md`
 - Create: `docs/architecture.md`
@@ -1249,11 +1284,12 @@ git commit -m "chore: switch to app.config.ts and add eas build profiles"
 - Create: `docs/adr/0001-expo-router-et-structure-par-acteur.md`
 
 **Interfaces:**
+
 - None — documentation only, no code interfaces.
 
 - [ ] **Step 1: Create README.md**
 
-```markdown
+````markdown
 # Emetis App
 
 App mobile React Native / Expo pour [emetis.net](https://emetis.net).
@@ -1273,6 +1309,7 @@ npm install
 cp .env.example .env
 npm start
 ```
+````
 
 ## Documentation
 
@@ -1281,7 +1318,8 @@ npm start
 - [Conventions](docs/conventions.md)
 - [Contributing](docs/contributing.md)
 - [Spec architecture complète](docs/superpowers/specs/2026-10-12-emetis-app-architecture-design.md)
-```
+
+````
 
 - [ ] **Step 2: Create docs/getting-started.md**
 
@@ -1301,7 +1339,7 @@ git clone <repo-url>
 cd emetis-app
 npm install
 cp .env.example .env
-```
+````
 
 Renseigner `.env` avec l'URL de l'API (`EXPO_PUBLIC_API_BASE_URL`).
 
@@ -1319,7 +1357,8 @@ npm run android # émulateur Android
 - `npm run format` — formate avec Prettier
 - `npm run typecheck` — vérifie les types TypeScript (`npx tsc --noEmit`)
 - `npm test` — lance les tests Jest
-```
+
+````
 
 - [ ] **Step 3: Create docs/architecture.md**
 
@@ -1352,7 +1391,7 @@ Aucun fichier des acteurs existants ne doit être modifié pour ça.
 1. Créer `src/actors/<acteur>/features/<feature>/` avec `api.ts`, `use<Feature>.ts`, `types.ts`.
 2. Suivre le pattern de `src/actors/host/features/listings/` comme référence (query hook TanStack Query).
 3. Créer l'écran dans `app/(<acteur>)/(tabs)/<feature>.tsx` qui importe depuis `src/actors/<acteur>/features/<feature>/`.
-```
+````
 
 - [ ] **Step 4: Create docs/conventions.md**
 
@@ -1388,9 +1427,10 @@ Toujours l'alias `@/` pour sortir du dossier courant. Jamais de `../../../../`.
 - `hotfix/<description>`
 
 ## Commits (Conventional Commits)
-
 ```
+
 <type>(<scope>): <description impérative>
+
 ```
 
 Types: `feat`, `fix`, `chore`, `refactor`, `test`, `docs`, `style`, `perf`, `ci`.
@@ -1401,7 +1441,7 @@ Validé automatiquement par commitlint à chaque commit.
 
 - [ ] **Step 5: Create docs/contributing.md**
 
-```markdown
+````markdown
 # Contributing
 
 ## Workflow
@@ -1421,11 +1461,13 @@ npm run format:check
 npx tsc --noEmit
 npm test
 ```
+````
 
 ## Revue de code
 
 Vérifier: respect de la structure par acteur (pas de logique dans `app/`), nommage conforme à `docs/conventions.md`, tests sur la logique métier ajoutée.
-```
+
+````
 
 - [ ] **Step 6: Create docs/adr/0001-expo-router-et-structure-par-acteur.md**
 
@@ -1454,7 +1496,7 @@ d'un nouvel acteur.
 - `app/` reste fin et lisible, toute la complexité vit dans `src/`.
 - Légère indirection (chaque route délègue à un composant dans `src/`) acceptée
   pour garder cette isolation.
-```
+````
 
 - [ ] **Step 7: Commit**
 
