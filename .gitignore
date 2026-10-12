@@ -45,3 +45,6 @@ example
 # local worktrees
 .worktrees/
 .env
+
+# Claude Code local session state
+.claude/scheduled_tasks.lock
