@@ -32,7 +32,8 @@
   "devDependencies": {
     "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^21.2.3",
-    "@testing-library/react-native": "^14.1.0",
+    "@testing-library/react-native": "^13.3.3",
+    "@types/jest": "^29.5.14",
     "@types/react": "~19.2.2",
     "eslint": "^9.39.5",
     "eslint-config-expo": "~57.0.2",
@@ -42,6 +43,7 @@
     "jest-expo": "~57.0.5",
     "lint-staged": "^17.6.0",
     "prettier": "^3.9.10",
+    "react-test-renderer": "^19.2.3",
     "typescript": "~6.0.3"
   },
   "scripts": {
@@ -54,6 +56,8 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "prepare": "husky"
   },
   "private": true
