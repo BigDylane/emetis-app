@@ -4,7 +4,9 @@ import Animated, {
   Easing,
   cancelAnimation,
   interpolate,
+  measure,
   runOnJS,
+  useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -14,16 +16,18 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Colors } from '@/constants/colors';
 import { appName } from '@/lib/appInfo';
+import { headerLogoLayout } from '@/lib/headerLogoLayout';
 
-const ENTER_DURATION = 450;
-const LETTERS_START_DELAY = 320;
-const LETTERS_DURATION = 700;
-const HOLD_DURATION = 500;
-const EXIT_DURATION = 350;
+const ENTER_DURATION = 750;
+const LETTERS_START_DELAY = 550;
+const LETTERS_DURATION = 1150;
+const HOLD_DURATION = 700;
+const EXIT_DURATION = 450;
+const EXIT_TOTAL_DELAY = LETTERS_START_DELAY + LETTERS_DURATION + HOLD_DURATION;
 
 const CHEVRON_START_OFFSET = 320;
-const CHEVRON_START_SCALE = 1.35;
-const CHEVRON_START_ROTATE = -18;
+const CHEVRON_START_SCALE = 1.5;
+const CHEVRON_START_ROTATE = -35;
 
 interface AnimatedSplashProps {
   onFinish: () => void;
@@ -54,11 +58,16 @@ function AnimatedLetter({ letter, index, total, progress }: AnimatedLetterProps)
 }
 
 export function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
+  const chevronRef = useAnimatedRef<Animated.Image>();
+
   const chevronTranslateX = useSharedValue(CHEVRON_START_OFFSET);
+  const chevronTranslateY = useSharedValue(0);
   const chevronScale = useSharedValue(CHEVRON_START_SCALE);
   const chevronRotate = useSharedValue(CHEVRON_START_ROTATE);
+  const chevronOpacity = useSharedValue(1);
   const lettersProgress = useSharedValue(0);
-  const overlayOpacity = useSharedValue(1);
+  const backdropOpacity = useSharedValue(1);
+  const textOpacity = useSharedValue(1);
 
   useEffect(() => {
     chevronTranslateX.value = withTiming(0, {
@@ -79,46 +88,99 @@ export function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
       withTiming(1, { duration: LETTERS_DURATION, easing: Easing.out(Easing.quad) }),
     );
 
-    overlayOpacity.value = withDelay(
-      LETTERS_START_DELAY + LETTERS_DURATION + HOLD_DURATION,
-      withTiming(0, { duration: EXIT_DURATION, easing: Easing.in(Easing.quad) }, () => {
-        runOnJS(onFinish)();
+    // The 0-duration withTiming below exists only to land its completion
+    // callback - a worklet running on the UI thread - at the exact moment the
+    // exit phase should begin, so the chevron and the header's logo (if any)
+    // can be measured synchronously right before the exit transforms are
+    // computed and kicked off.
+    backdropOpacity.value = withDelay(
+      EXIT_TOTAL_DELAY,
+      withTiming(1, { duration: 0 }, () => {
+        const header = headerLogoLayout.value;
+        const chevron = measure(chevronRef);
+
+        if (header && chevron) {
+          const dx = header.x + header.width / 2 - (chevron.pageX + chevron.width / 2);
+          const dy = header.y + header.height / 2 - (chevron.pageY + chevron.height / 2);
+          const targetScale = header.width / chevron.width;
+
+          chevronTranslateX.value = withTiming(chevronTranslateX.value + dx, {
+            duration: EXIT_DURATION,
+            easing: Easing.inOut(Easing.cubic),
+          });
+          chevronTranslateY.value = withTiming(dy, {
+            duration: EXIT_DURATION,
+            easing: Easing.inOut(Easing.cubic),
+          });
+          chevronScale.value = withTiming(targetScale, {
+            duration: EXIT_DURATION,
+            easing: Easing.inOut(Easing.cubic),
+          });
+        } else {
+          chevronOpacity.value = withTiming(0, {
+            duration: EXIT_DURATION,
+            easing: Easing.in(Easing.quad),
+          });
+        }
+
+        textOpacity.value = withTiming(0, {
+          duration: EXIT_DURATION,
+          easing: Easing.in(Easing.quad),
+        });
+        backdropOpacity.value = withTiming(
+          0,
+          { duration: EXIT_DURATION, easing: Easing.in(Easing.quad) },
+          () => {
+            runOnJS(onFinish)();
+          },
+        );
       }),
     );
 
     return () => {
       cancelAnimation(chevronTranslateX);
+      cancelAnimation(chevronTranslateY);
       cancelAnimation(chevronScale);
       cancelAnimation(chevronRotate);
+      cancelAnimation(chevronOpacity);
       cancelAnimation(lettersProgress);
-      cancelAnimation(overlayOpacity);
+      cancelAnimation(backdropOpacity);
+      cancelAnimation(textOpacity);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const chevronStyle = useAnimatedStyle(() => ({
+    opacity: chevronOpacity.value,
     transform: [
       { translateX: chevronTranslateX.value },
+      { translateY: chevronTranslateY.value },
       { scale: chevronScale.value },
       { rotate: `${chevronRotate.value}deg` },
     ],
   }));
 
-  const overlayStyle = useAnimatedStyle(() => ({
-    opacity: overlayOpacity.value,
+  const backdropStyle = useAnimatedStyle(() => ({
+    opacity: backdropOpacity.value,
   }));
 
-  const letters = appName.split('');
+  const textStyle = useAnimatedStyle(() => ({
+    opacity: textOpacity.value,
+  }));
+
+  const letters = appName.toLowerCase().split('');
 
   return (
-    <Animated.View style={[styles.overlay, overlayStyle]} pointerEvents="none">
+    <View style={styles.root} pointerEvents="none">
+      <Animated.View style={[styles.backdrop, backdropStyle]} />
       <View style={styles.lockup}>
         <Animated.Image
+          ref={chevronRef}
           source={require('@/assets/images/splash-icon.png')}
           style={[styles.logo, chevronStyle]}
           resizeMode="contain"
         />
-        <View style={styles.lettersRow}>
+        <Animated.View style={[styles.lettersRow, textStyle]}>
           {letters.map((letter, index) => (
             <AnimatedLetter
               key={`${letter}-${index}`}
@@ -128,14 +190,14 @@ export function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
               progress={lettersProgress}
             />
           ))}
-        </View>
+        </Animated.View>
       </View>
-    </Animated.View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: {
+  root: {
     position: 'absolute',
     top: 0,
     left: 0,
@@ -143,6 +205,13 @@ const styles = StyleSheet.create({
     bottom: 0,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  backdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: Colors.light.primary,
   },
   lockup: {
@@ -150,17 +219,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: 88,
-    height: 88,
-    marginRight: 14,
+    width: 128,
+    height: 128,
+    marginRight: 18,
   },
   lettersRow: {
     flexDirection: 'row',
   },
   letter: {
     color: '#ffffff',
-    fontSize: 48,
+    fontSize: 60,
     fontWeight: '700',
-    letterSpacing: 1,
+    letterSpacing: -0.5,
   },
 });

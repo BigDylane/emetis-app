@@ -1,5 +1,6 @@
 import { Redirect, Stack } from 'expo-router';
 import { useSessionStore } from '@/auth/sessionStore';
+import { Header } from '@/components/ui/Header';
 
 export default function TravelerLayout() {
   const user = useSessionStore((state) => state.user);
@@ -8,5 +9,5 @@ export default function TravelerLayout() {
     return <Redirect href="/(auth)/login" />;
   }
 
-  return <Stack />;
+  return <Stack screenOptions={{ header: () => <Header /> }} />;
 }
