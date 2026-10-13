@@ -1,9 +1,10 @@
 import { View, Text, StyleSheet } from 'react-native';
+import { appName } from '@/lib/appInfo';
 
 export function DiscoveryScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Découvrez Emetis</Text>
+      <Text style={styles.title}>Découvrez {appName}</Text>
     </View>
   );
 }
