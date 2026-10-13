@@ -210,8 +210,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: 92,
-    height: 92,
+    width: 80,
+    height: 80,
     marginRight: 14,
   },
   lettersRow: {
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
   },
   letter: {
     color: '#ffffff',
-    fontSize: 60,
+    fontSize: 50,
     fontWeight: '700',
     letterSpacing: -0.5,
   },
