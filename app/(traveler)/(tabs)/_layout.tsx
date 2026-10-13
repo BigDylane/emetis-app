@@ -6,10 +6,10 @@ export default function TravelerTabsLayout() {
   return (
     <Tabs tabBar={(props) => <TabBar {...props} />} screenOptions={{ headerShown: false }}>
       <Tabs.Screen
-        name="search"
+        name="index"
         options={{
-          title: 'Recherche',
-          tabBarIcon: ({ color, size }) => <Ionicons name="search" color={color} size={size} />,
+          title: 'Accueil',
+          tabBarIcon: ({ color, size }) => <Ionicons name="home" color={color} size={size} />,
         }}
       />
       <Tabs.Screen
@@ -20,16 +20,23 @@ export default function TravelerTabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="messages"
+        name="search"
         options={{
-          title: 'Messages',
-          tabBarIcon: ({ color, size }) => <Ionicons name="chatbubble" color={color} size={size} />,
+          title: 'Recherche',
+          tabBarIcon: ({ color, size }) => <Ionicons name="search" color={color} size={size} />,
+        }}
+      />
+      <Tabs.Screen
+        name="favorites"
+        options={{
+          title: 'Favoris',
+          tabBarIcon: ({ color, size }) => <Ionicons name="heart" color={color} size={size} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profil',
+          title: 'Compte',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person-circle" color={color} size={size} />
           ),

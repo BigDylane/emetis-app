@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet } from 'react-native';
 
-export function MessagesScreen() {
+export function HomeScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Messages</Text>
+      <Text style={styles.title}>Accueil (traveler)</Text>
     </View>
   );
 }
