@@ -18,11 +18,11 @@ import { Colors } from '@/constants/colors';
 import { appName } from '@/lib/appInfo';
 import { headerLogoLayout } from '@/lib/headerLogoLayout';
 
-const ENTER_DURATION = 750;
-const LETTERS_START_DELAY = 550;
-const LETTERS_DURATION = 1150;
-const HOLD_DURATION = 700;
-const EXIT_DURATION = 450;
+const ENTER_DURATION = 1100;
+const LETTERS_START_DELAY = 750;
+const LETTERS_DURATION = 1800;
+const HOLD_DURATION = 750;
+const EXIT_DURATION = 500;
 const EXIT_TOTAL_DELAY = LETTERS_START_DELAY + LETTERS_DURATION + HOLD_DURATION;
 
 const CHEVRON_START_OFFSET = 320;
@@ -219,9 +219,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: 128,
-    height: 128,
-    marginRight: 18,
+    width: 92,
+    height: 92,
+    marginRight: 14,
   },
   lettersRow: {
     flexDirection: 'row',

@@ -1,12 +1,17 @@
 import { useEffect } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { measure, runOnUI, useAnimatedRef } from 'react-native-reanimated';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { appName } from '@/lib/appInfo';
 import { headerLogoLayout } from '@/lib/headerLogoLayout';
 
+const HEADER_BACKGROUND = '#FFFFFF';
+const HEADER_TEXT_COLOR = '#171717';
+
 export function Header() {
   const colors = useThemeColors();
+  const insets = useSafeAreaInsets();
   const logoRef = useAnimatedRef<Image>();
 
   useEffect(() => {
@@ -31,12 +36,7 @@ export function Header() {
   }
 
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: colors.screenBackground, borderBottomColor: colors.border },
-      ]}
-    >
+    <View style={[styles.container, { paddingTop: insets.top + 10 }]}>
       <Image
         ref={logoRef}
         onLayout={measureLogo}
@@ -44,7 +44,7 @@ export function Header() {
         style={[styles.logo, { tintColor: colors.primary }]}
         resizeMode="contain"
       />
-      <Text style={[styles.title, { color: colors.foreground }]}>{appName.toLowerCase()}</Text>
+      <Text style={styles.title}>{appName.toLowerCase()}</Text>
     </View>
   );
 }
@@ -54,8 +54,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingBottom: 10,
+    backgroundColor: HEADER_BACKGROUND,
     borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#E1E3E6',
   },
   logo: {
     width: 24,
@@ -66,5 +68,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     letterSpacing: -0.3,
+    color: HEADER_TEXT_COLOR,
   },
 });
