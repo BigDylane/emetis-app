@@ -10,6 +10,7 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
+import { Colors } from '@/constants/colors';
 
 const ENTRANCE_DURATION = 500;
 const HOLD_DURATION = 900;
@@ -66,7 +67,7 @@ export function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
     <Animated.View style={[styles.overlay, overlayStyle]} pointerEvents="none">
       <Animated.View style={logoStyle}>
         <Image
-          source={require('@/assets/images/icon.png')}
+          source={require('@/assets/images/splash-icon.png')}
           style={styles.logo}
           resizeMode="contain"
         />
@@ -85,12 +86,12 @@ const styles = StyleSheet.create({
     bottom: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#208AEF',
+    backgroundColor: Colors.light.primary,
     gap: 16,
   },
   logo: {
-    width: 96,
-    height: 96,
+    width: 120,
+    height: 120,
   },
   title: {
     color: '#ffffff',

@@ -11,14 +11,12 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: 'net.emetis.app',
-    icon: './assets/expo.icon',
   },
   android: {
     package: 'net.emetis.app',
     adaptiveIcon: {
-      backgroundColor: '#E6F4FE',
+      backgroundColor: '#FFFFFF',
       foregroundImage: './assets/images/android-icon-foreground.png',
-      backgroundImage: './assets/images/android-icon-background.png',
       monochromeImage: './assets/images/android-icon-monochrome.png',
     },
     predictiveBackGestureEnabled: false,
@@ -32,9 +30,9 @@ const config: ExpoConfig = {
     [
       'expo-splash-screen',
       {
-        backgroundColor: '#208AEF',
+        backgroundColor: '#FF2D55',
         image: './assets/images/splash-icon.png',
-        imageWidth: 76,
+        imageWidth: 90,
       },
     ],
   ],
