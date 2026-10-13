@@ -9,7 +9,7 @@ export default function HostTabsLayout() {
         name="index"
         options={{
           title: 'Dashboard',
-          tabBarIcon: ({ color, size }) => <Ionicons name="home" color={color} size={size} />,
+          tabBarIcon: ({ color, size }) => <Ionicons name="grid" color={color} size={size} />,
         }}
       />
       <Tabs.Screen
