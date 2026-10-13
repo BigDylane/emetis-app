@@ -1,5 +1,12 @@
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/colors';
 
@@ -27,6 +34,64 @@ interface TabBarProps {
   };
 }
 
+interface TabBarItemProps {
+  focused: boolean;
+  onPress: () => void;
+  renderIcon?: (color: string) => ReactNode;
+}
+
+function TabBarItem({ focused, onPress, renderIcon }: TabBarItemProps) {
+  const scale = useSharedValue(1);
+  const activeOpacity = useSharedValue(focused ? 1 : 0);
+
+  useEffect(() => {
+    activeOpacity.value = withTiming(focused ? 1 : 0, {
+      duration: 200,
+      easing: Easing.out(Easing.quad),
+    });
+  }, [focused, activeOpacity]);
+
+  function handlePressIn() {
+    scale.value = withTiming(0.82, { duration: 100, easing: Easing.out(Easing.quad) });
+  }
+
+  function handlePressOut() {
+    scale.value = withSpring(1, { damping: 10, stiffness: 220 });
+  }
+
+  const bounceStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const activeStyle = useAnimatedStyle(() => ({
+    opacity: activeOpacity.value,
+  }));
+
+  const inactiveStyle = useAnimatedStyle(() => ({
+    opacity: 1 - activeOpacity.value,
+  }));
+
+  return (
+    <Pressable
+      onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      style={styles.item}
+    >
+      <Animated.View style={bounceStyle}>
+        <View style={styles.iconSlot}>
+          <Animated.View style={[styles.iconLayer, inactiveStyle]}>
+            {renderIcon?.(Colors.light.mutedForeground)}
+          </Animated.View>
+          <Animated.View style={[styles.iconLayer, activeStyle]}>
+            {renderIcon?.(Colors.light.primary)}
+          </Animated.View>
+        </View>
+      </Animated.View>
+    </Pressable>
+  );
+}
+
 export function TabBar({ state, descriptors, navigation }: TabBarProps) {
   const insets = useSafeAreaInsets();
 
@@ -47,13 +112,13 @@ export function TabBar({ state, descriptors, navigation }: TabBarProps) {
           }
         }
 
-        const color = isFocused ? Colors.light.primary : Colors.light.mutedForeground;
-        const icon = options.tabBarIcon?.({ focused: isFocused, color, size: 24 });
-
         return (
-          <Pressable key={route.key} onPress={onPress} style={styles.item}>
-            {icon}
-          </Pressable>
+          <TabBarItem
+            key={route.key}
+            focused={isFocused}
+            onPress={onPress}
+            renderIcon={(color) => options.tabBarIcon?.({ focused: isFocused, color, size: 24 })}
+          />
         );
       })}
     </View>
@@ -73,5 +138,16 @@ const styles = StyleSheet.create({
     minHeight: 40,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  iconSlot: {
+    width: 24,
+    height: 24,
+  },
+  iconLayer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 });
