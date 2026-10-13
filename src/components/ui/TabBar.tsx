@@ -31,69 +31,46 @@ export function TabBar({ state, descriptors, navigation }: TabBarProps) {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.wrapper, { paddingBottom: insets.bottom + 10 }]} pointerEvents="box-none">
-      <View style={styles.bar}>
-        {state.routes.map((route, index) => {
-          const { options } = descriptors[route.key];
-          const isFocused = state.index === index;
+    <View style={[styles.bar, { paddingBottom: insets.bottom + 6 }]}>
+      {state.routes.map((route, index) => {
+        const { options } = descriptors[route.key];
+        const isFocused = state.index === index;
 
-          function onPress() {
-            const event = navigation.emit({
-              type: 'tabPress',
-              target: route.key,
-              canPreventDefault: true,
-            });
-            if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(route.name, route.params);
-            }
+        function onPress() {
+          const event = navigation.emit({
+            type: 'tabPress',
+            target: route.key,
+            canPreventDefault: true,
+          });
+          if (!isFocused && !event.defaultPrevented) {
+            navigation.navigate(route.name, route.params);
           }
+        }
 
-          const color = isFocused ? '#FFFFFF' : Colors.light.mutedForeground;
-          const icon = options.tabBarIcon?.({ focused: isFocused, color, size: 22 });
+        const color = isFocused ? Colors.light.primary : Colors.light.mutedForeground;
+        const icon = options.tabBarIcon?.({ focused: isFocused, color, size: 24 });
 
-          return (
-            <Pressable key={route.key} onPress={onPress} style={styles.item}>
-              <View style={[styles.iconSlot, isFocused && styles.iconSlotActive]}>{icon}</View>
-            </Pressable>
-          );
-        })}
-      </View>
+        return (
+          <Pressable key={route.key} onPress={onPress} style={styles.item}>
+            {icon}
+          </Pressable>
+        );
+      })}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    alignItems: 'center',
-  },
   bar: {
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
-    borderRadius: 28,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    gap: 6,
-    shadowColor: '#000',
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 6,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: '#E1E3E6',
+    paddingTop: 10,
   },
   item: {
-    paddingHorizontal: 4,
-  },
-  iconSlot: {
-    width: 44,
-    height: 44,
-    borderRadius: 16,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  iconSlotActive: {
-    backgroundColor: Colors.light.primary,
   },
 });
