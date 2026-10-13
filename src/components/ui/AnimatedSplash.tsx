@@ -25,9 +25,7 @@ const HOLD_DURATION = 750;
 const EXIT_DURATION = 500;
 const EXIT_TOTAL_DELAY = LETTERS_START_DELAY + LETTERS_DURATION + HOLD_DURATION;
 
-const CHEVRON_START_OFFSET = 320;
-const CHEVRON_START_SCALE = 1.5;
-const CHEVRON_START_ROTATE = -35;
+const CHEVRON_START_SCALE = 0.5;
 
 interface AnimatedSplashProps {
   onFinish: () => void;
@@ -60,28 +58,23 @@ function AnimatedLetter({ letter, index, total, progress }: AnimatedLetterProps)
 export function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
   const chevronRef = useAnimatedRef<Animated.Image>();
 
-  const chevronTranslateX = useSharedValue(CHEVRON_START_OFFSET);
+  const chevronTranslateX = useSharedValue(0);
   const chevronTranslateY = useSharedValue(0);
   const chevronScale = useSharedValue(CHEVRON_START_SCALE);
-  const chevronRotate = useSharedValue(CHEVRON_START_ROTATE);
-  const chevronOpacity = useSharedValue(1);
+  const chevronOpacity = useSharedValue(0);
   const lettersProgress = useSharedValue(0);
   const backdropOpacity = useSharedValue(1);
   const textOpacity = useSharedValue(1);
 
   useEffect(() => {
-    chevronTranslateX.value = withTiming(0, {
-      duration: ENTER_DURATION,
-      easing: Easing.out(Easing.cubic),
+    chevronOpacity.value = withTiming(1, {
+      duration: ENTER_DURATION * 0.6,
+      easing: Easing.out(Easing.quad),
     });
     chevronScale.value = withSequence(
       withTiming(1.1, { duration: ENTER_DURATION * 0.7, easing: Easing.out(Easing.quad) }),
       withTiming(1, { duration: ENTER_DURATION * 0.3, easing: Easing.inOut(Easing.quad) }),
     );
-    chevronRotate.value = withTiming(0, {
-      duration: ENTER_DURATION,
-      easing: Easing.out(Easing.cubic),
-    });
 
     lettersProgress.value = withDelay(
       LETTERS_START_DELAY,
@@ -141,7 +134,6 @@ export function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
       cancelAnimation(chevronTranslateX);
       cancelAnimation(chevronTranslateY);
       cancelAnimation(chevronScale);
-      cancelAnimation(chevronRotate);
       cancelAnimation(chevronOpacity);
       cancelAnimation(lettersProgress);
       cancelAnimation(backdropOpacity);
@@ -156,7 +148,6 @@ export function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
       { translateX: chevronTranslateX.value },
       { translateY: chevronTranslateY.value },
       { scale: chevronScale.value },
-      { rotate: `${chevronRotate.value}deg` },
     ],
   }));
 
