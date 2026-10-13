@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { measure, runOnUI, useAnimatedRef } from 'react-native-reanimated';
 import { useSessionStore } from '@/auth/sessionStore';
@@ -50,6 +51,8 @@ export function Header() {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top + 10 }]}>
+      {/* Header toujours blanc: icônes sombres quel que soit le thème du téléphone */}
+      <StatusBar style="dark" />
       <Pressable style={styles.brand} onPress={goHome} hitSlop={8}>
         <Image
           ref={logoRef}
